@@ -1,7 +1,7 @@
 name: Build Android UE Dumper
 
 on:
-  workflow_dispatch: # 网页手动触发
+  workflow_dispatch: # 网页手动触发编译
 
 jobs:
   build:
@@ -10,13 +10,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # 拉取子模块，必不可少
+          submodules: recursive
 
       - name: Download Android NDK r29
         run: |
           wget https://dl.google.com/android/repository/android-ndk-r29-linux.zip
           unzip -q android-ndk-r29-linux.zip
           echo "ANDROID_NDK_ROOT=$PWD/android-ndk-r29" >> $GITHUB_ENV
+          # 创建软链接，适配Makefile写死的 /ndk-build
+          sudo ln -s $PWD/android-ndk-r29/ndk-build /ndk-build
 
       - name: Compile project
         run: |
