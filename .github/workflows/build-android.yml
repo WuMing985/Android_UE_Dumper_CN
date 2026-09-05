@@ -12,19 +12,16 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Download Android NDK r29
+      - name: Download Android NDK r25c
         run: |
-          wget https://dl.google.com/android/repository/android-ndk-r29-linux.zip
-          unzip -q android-ndk-r29-linux.zip
-          echo "ANDROID_NDK_ROOT=$PWD/android-ndk-r29" >> $GITHUB_ENV
-          # 直接链接真实二进制，不是外层壳脚本
-          sudo ln -s $PWD/android-ndk-r29/build/ndk-build /ndk-build
+          wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
+          unzip -q android-ndk-r25c-linux.zip
+          echo "ANDROID_NDK_ROOT=$PWD/android-ndk-r25c" >> $GITHUB_ENV
+          sudo ln -s $PWD/android-ndk-r25c/ndk-build /ndk-build
 
       - name: Compile project
         run: |
-          ls -la
           cd ./AndUEDumper
-          ls -la
           make clean && make
           ls -la out/
 
