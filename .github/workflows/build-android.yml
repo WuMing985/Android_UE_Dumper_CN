@@ -1,34 +1,33 @@
-name: Build AndUEDumper
+name: Build Android UE Dumper
+
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch: # 网页手动触发
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code with submodules
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: recursive  # 拉取子模块，必不可少
 
-      - name: Download Android NDK r26c
+      - name: Download Android NDK r29
         run: |
-          wget https://dl.google.com/android/repository/android-ndk-r26c-linux.zip
-          unzip android-ndk-r26c-linux.zip
-          echo "NDK_HOME=$PWD/android-ndk-r26c" >> $GITHUB_ENV
-
-      - name: Install make
-        run: sudo apt update && sudo apt install make
+          wget https://dl.google.com/android/repository/android-ndk-r29-linux.zip
+          unzip -q android-ndk-r29-linux.zip
+          echo "ANDROID_NDK_ROOT=$PWD/android-ndk-r29" >> $GITHUB_ENV
 
       - name: Compile project
         run: |
+          ls -la
           cd ./AndUEDumper
+          ls -la
           make clean && make
+          ls -la out/
 
       - name: Upload compiled artifact
         uses: actions/upload-artifact@v4
         with:
           name: compiled-binary
-          path: AndUEDumper/out/*
+          path: "**/out/*"
