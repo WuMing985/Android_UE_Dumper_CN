@@ -2,11 +2,11 @@ name: Build AndUEDumper
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # 开启网页手动点击运行
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu‑latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code with submodules
         uses: actions/checkout@v4
@@ -15,19 +15,20 @@ jobs:
 
       - name: Download Android NDK r26c
         run: |
-          wget https://dl.google.com/android/repository/android‑ndk‑r26c‑linux.zip
-          unzip android‑ndk‑r26c‑linux.zip
-          echo "NDK_HOME=$PWD/android‑ndk‑r26c" >> $GITHUB_ENV
+          wget https://dl.google.com/android/repository/android-ndk-r26c-linux.zip
+          unzip android-ndk-r26c-linux.zip
+          echo "NDK_HOME=$PWD/android-ndk-r26c" >> $GITHUB_ENV
 
       - name: Install make
         run: sudo apt update && sudo apt install make
 
       - name: Compile project
-        working‑directory: ./AndUEDumper
-        run: make clean && make
+        run: |
+          cd ./AndUEDumper
+          make clean && make
 
       - name: Upload compiled artifact
-        uses: actions/upload‑artifact@v4
+        uses: actions/upload-artifact@v4
         with:
-          name: compiled‑binary
+          name: compiled-binary
           path: AndUEDumper/out/*
